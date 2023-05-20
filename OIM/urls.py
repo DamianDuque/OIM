@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from MGYP import views as MGYPViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', MGYPViews.home),
+    path('home/', MGYPViews.home),
+    path('login/', MGYPViews.login1),
+    path('logout/', MGYPViews.logoutUser),
 ]
