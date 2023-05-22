@@ -39,3 +39,8 @@ def logoutUser(request):
 def home(request):
     usuarios_obj = Empleado.objects.get(nombre=request.user)
     return render(request, 'home.html', {'nombre': usuarios_obj.nombre})
+
+@login_required(login_url='../login/')
+def inventario(request):
+    usuarios_obj = Empleado.objects.get(nombre=request.user)
+    return render(request, 'inventario.html', {'nombre': usuarios_obj.nombre})
