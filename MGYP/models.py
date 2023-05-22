@@ -16,7 +16,7 @@ class Producto(models.Model):
 	codigo_de_barras = models.CharField(max_length=45, null=False)
 	nombre = models.CharField(max_length=45, null=False)
 	descripcion = models.CharField(max_length=100, null=False)
-	peso = models.CharField(max_length=45, null=False)
+	peso = models.PositiveIntegerField(null=False)
 
 class Compras(models.Model):
 	id_generico_1 = models.AutoField(primary_key=True, blank=False)

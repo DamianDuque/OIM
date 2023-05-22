@@ -44,3 +44,8 @@ def home(request):
 def inventario(request):
     usuarios_obj = Empleado.objects.get(nombre=request.user)
     return render(request, 'inventario.html', {'nombre': usuarios_obj.nombre})
+
+@login_required(login_url='../login/')
+def nuevo_producto(request):
+    usuarios_obj = Empleado.objects.get(nombre=request.user)
+    return render(request, 'nuevo_producto.html', {'nombre': usuarios_obj.nombre})

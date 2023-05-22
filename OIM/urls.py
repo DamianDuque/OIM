@@ -24,4 +24,5 @@ urlpatterns = [
     path('login/', MGYPViews.login1),
     path('logout/', MGYPViews.logoutUser),
     path('inventario/', MGYPViews.inventario),
+    path('inventario/nuevo_producto', MGYPViews.nuevo_producto),
 ]
