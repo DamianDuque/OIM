@@ -1,0 +1,109 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es" class="cuerpo_resto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' href='{% static "css/estilos_prueba.css" %}' rel="stylesheet">
+    <link rel="shortcut icon" href="https://i.postimg.cc/fLgnjGQb/Mundialgyp-LOGO.png">
+    <link href="//db.onlinewebfonts.com/c/c25432bd2c16dfe9cbff2d2968e73fcb?family=AllRoundGothicW01-Demi"
+        rel="stylesheet" type="text/css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title> Productos - MGYP</title>
+</head>
+
+<body class="cuerpo_resto">
+
+    {% include "navbar.html" %}
+
+    {% include "barra_navegacion_iniciada.html" %}
+
+    <div class="" style="text-align: center; padding-top:3.5em;">
+        <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
+            src="https://i.postimg.cc/ZqT8btpn/banner-productos.png" border="0px">
+    </div>
+    <div align="center" style="padding-top:2em;">
+        <div>
+            <h2 id="op" align="center" style="padding-bottom:0.5em;">
+                <div style="margin-top: 1em; margin-bottom: 0.8em;"><strong>Seleccione una opción</strong></div>
+                <table align="center" style="margin-bottom:2em;">
+                    <tr>
+                        <td><a href="../productos/nuevo_producto"><button class="btn_inv">
+                                    <h5>Añadir nuevo producto</h5>
+                                </button></a></td>
+                        <td><a href="../productos/#lista" id="rev_pr"><button class="btn_inv">
+                                    <h5>Revisar productos</h5>
+                                </button></a></td>
+                    </tr>
+                </table>
+
+            </h2>
+        </div>
+        <div id="prueba">
+            <h2 align="center" style="padding-bottom:0.5em;">
+                <a href="../productos/" id="rev_pr"><button style="margin-bottom: 0.5em;" class="btn_inv">
+                    <h6>Regresar</h6>
+                </button></a>
+                <div style="text-align:center; margin-top:13px; margin-bottom:18px;">
+                    <h4>
+                        <font face="Gadugi"><b>Lista de productos registrados</b></font>
+                    </h4>
+                </div>
+
+                <div style="padding-left:6.2em; padding-right:6.2em; padding-bottom: 3em;">
+                    <table class="table table-hover table-bordered" style="border-color: #080808; ">
+                        <thead>
+                            <tr>
+                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>#</h5></th>
+                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Nombre</h5></th>
+                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Descripción</h5></th>
+                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Peso (kg)</h5></th>
+                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Código barras</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in producto %}
+                            <tr>
+                                <td style="background: #acacb4; color:rgb(24, 24, 24);"><h5>{{forloop.counter}}</h5></th>
+                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{producto.nombre}}</h5></td>
+                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);">
+                                    <h5>{{producto.descripcion}}</h5>
+                                </td>
+                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{producto.peso}}</h5>
+                                </td>
+                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{producto.codigo_de_barras}}</h5>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </h2>
+        </div>
+    </div>
+
+    {% include "footer.html" %}
+
+</body>
+
+<script>
+    const prueba = document.querySelector('#prueba');
+    prueba.style.display = 'none';
+    const rev_pr = document.querySelector('#rev_pr');
+
+    rev_pr.addEventListener('click', e => {
+        op.style.display = 'none';
+        prueba.style.display = 'block';
+    })
+
+
+</script>
+
+</html>

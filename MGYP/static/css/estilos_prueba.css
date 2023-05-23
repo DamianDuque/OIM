@@ -224,6 +224,8 @@
 	}
 
 	.btn_inv:hover {
+		
 		background: #8f8f8f;
 		transition: .3s ease all;
+		
 	}

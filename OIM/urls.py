@@ -22,7 +22,10 @@ urlpatterns = [
     path('', MGYPViews.home),
     path('home/', MGYPViews.home),
     path('login/', MGYPViews.login1),
+    path('registro/', MGYPViews.registro),
     path('logout/', MGYPViews.logoutUser),
     path('inventario/', MGYPViews.inventario),
-    path('inventario/nuevo_producto', MGYPViews.nuevo_producto),
+    path('productos/', MGYPViews.productos),
+    path('actividad/', MGYPViews.actividad),
+    path('productos/nuevo_producto', MGYPViews.nuevo_producto),
 ]

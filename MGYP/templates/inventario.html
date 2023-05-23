@@ -24,32 +24,13 @@
     {% include "barra_navegacion_iniciada.html" %}
 
     <div class="" style="text-align: center; padding-top:3.5em;">
-        <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
+        <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1035
             src="https://i.postimg.cc/RFDYR0L6/banner-inventario.png" border="0px">
     </div>
     <div align="center" style="padding-top:2em;">
         <div>
             <h2 align="center" style="padding-bottom:0.5em;">
                 <div style="margin-top: 1em; margin-bottom: 0.8em;"><strong>Seleccione una opción</strong></div>
-                    <table align="center" style="margin-bottom:2em;">                        
-                        <tr>
-                          <td><a href="../inventario/nuevo_producto" ><button class="btn_inv"><h4>Añadir nuevo producto</h4></button></a></td>
-                          <td><a id="haha"><button class="btn_inv"><h4>Revisar inventario</h4></button></a></td>
-                        </tr>
-                    </table>
-                
-            </h2>
-        </div>
-
-        <div id="prueba">
-            <h2 align="center" style="padding-bottom:0.5em;">
-                <div style="margin-top: 1em; margin-bottom: 0.8em;"><strong>Seleccione una opción</strong></div>
-                    <table align="center" style="margin-bottom:2em;">                        
-                        <tr>
-                          <td><a href="../home/"><button class="btn_inv"><h4>Añadir nuevo producto</h4></button></a></td>
-                          <td><a href="../home/"><button class="btn_inv"><h4>Revisar inventario</h4></button></a></td>
-                        </tr>
-                    </table>
                 
             </h2>
         </div>
@@ -58,17 +39,5 @@
     {% include "footer.html" %}
 
 </body>
-
-<script>
-    const prueba = document.querySelector('#prueba');
-    prueba.style.display = 'none';
-    const haha = document.querySelector('#haha');
-
-    haha.addEventListener('click', e => {
-        prueba.style.display = 'block';
-    })
-
-
-</script>
 
 </html>

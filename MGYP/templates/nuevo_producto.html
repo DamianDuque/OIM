@@ -27,22 +27,51 @@
         <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
             src="https://i.postimg.cc/RFDYR0L6/banner-inventario.png" border="0px">
     </div>
-    <div align="center" style="padding-top:2em;">
+    <div align="center" style="padding-top:2em; padding-bottom: 2em;">
         <div>
-            <h2 align="center" style="padding-bottom:0.5em;">
-                <div style="margin-top: 1em; margin-bottom: 0.8em;"><strong>Seleccione una opción</strong></div>
-                <table align="center" style="margin-bottom:2em;">
+            <a href="../productos/" id="rev_pr"><button style="margin-bottom: 0.5em; padding: 0.5em; border-radius: 0.7em;" class="btn_inv">
+                <h6>Regresar</h6>
+            </button></a>
+            <form action="../productos/nuevo_producto" method="POST">
+            <h5 align="center" style="padding-bottom:0.5em;">
+                <div style="margin-top: 1em; margin-bottom: 1.5em;"><strong>Ingrese los siguientes datos</strong></div>
+                <div>{{mensaje}}</div>
+                {% csrf_token %}
+                <table align="center">
                     <tr>
-                        <td>Hola</td>
-                        <td>Chao</td>
+                        <td>Nombre del producto</td>
+                        <td>Código de barras</td>
+                        <td>Peso (kg)</td>
                     </tr>
                     <tr>
-                        <td>Hey</td>
-                        <td>Haha</td>
+                        <td><input type="text" id="nombre" name="nombre" required></td>
+                        <td><input type="number" id="codigo_barras" name="codigo_barras" required></td>
+                        <td><input type="number" id="peso" name="peso" min="0" max="1000" step="0.1" required></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        
+                    </tr>
+                    
+                </table>
+                <table align="center">
+                    <tr>
+                        <td>Descripción</td>
+                    </tr>
+                    <tr>
+                        <td><textarea type="text" rows="3" cols="40" id="descripcion" name="descripcion" required></textarea></td>
                     </tr>
                 </table>
 
-            </h2>
+            </h5>
+            <div style="margin-bottom: 3em;"><a type="submit"><button class="btn_inv">
+                        <h5>Añadir nuevo producto</h5>
+                    </button></a></div>
+            </form>
         </div>
 
     </div>

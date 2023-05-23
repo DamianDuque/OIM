@@ -8,7 +8,6 @@ class Empleado(models.Model):
     nombre = models.CharField(max_length=45, null=False)
     rol = models.CharField(max_length=45, null=False, blank=False, choices=(
         ('bodeguero', 'bodeguero'), ('administrador', 'administrador')))
-    correo = models.EmailField(max_length=45, null=False, blank=False)
 
 
 class Producto(models.Model):
@@ -16,7 +15,7 @@ class Producto(models.Model):
 	codigo_de_barras = models.CharField(max_length=45, null=False)
 	nombre = models.CharField(max_length=45, null=False)
 	descripcion = models.CharField(max_length=100, null=False)
-	peso = models.PositiveIntegerField(null=False)
+	peso = models.DecimalField(decimal_places=2, max_digits=20, null=False)
 
 class Compras(models.Model):
 	id_generico_1 = models.AutoField(primary_key=True, blank=False)
@@ -82,3 +81,10 @@ class Inventario(models.Model):
 	Producto_id_producto = models.ForeignKey(
 		Producto, null=False, blank=False, on_delete=models.CASCADE)
 	cantidad_producto = models.PositiveIntegerField(default=0)
+
+
+class Actividad(models.Model):
+	id_empleado = models.ForeignKey(Empleado, null=False, blank=False, on_delete=models.CASCADE)
+	tipo_actividad = models.CharField(max_length=45, null=False, blank=False, choices=(
+		('nuevo producto', 'nuevo producto'), ('ingreso productos', 'ingreso productos'), ('despacho productos', 'despacho productos')))
+	fecha_actividad = models.DateTimeField(auto_now_add=True)
