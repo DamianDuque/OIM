@@ -111,12 +111,57 @@ def ingreso_productos(request):
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
         return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': ''})
     else:
-        lista_productos_temp = productos.splitlines() 
+
+        #Elementos que vienen de la base de datos
         compra_objeto = Compras.objects.get(id_compra=id_compra)
-        lista_pr_compra = compra_objeto.lista_productos
-        print(lista_pr_compra)
-        lista_productos = " ".join(Counter(lista_productos_temp).keys())
-        cantidades = " ".join(Counter(lista_productos_temp).values())
+        str_pr_compra = compra_objeto.lista_productos
+        lista_pr_compra = str_pr_compra.split()
+
+        # -- Arreglos de productos y cantidades -- #
+        lista_productos_compra = list(Counter(lista_pr_compra).keys())
+        cantidades_productos_compra = list(Counter(lista_pr_compra).values())
+        # -- Organizar lista recibida de compras -- #
+        lista_organizada_compra = list(sorted(zip(lista_productos_compra,cantidades_productos_compra)))
+
+        #Elementos que salen del formulario
+        lista_productos_temp = productos.splitlines()
+        print(lista_productos_temp)
+        
+        # -- Areglos de productos y cantidades -- #
+        lista_productos = list(Counter(lista_productos_temp).keys())
+        cantidades = list(Counter(lista_productos_temp).values())
+
+        # -- Organizar lista scaneada para ingresar -- #
+        lista_organizada_ingreso = list(sorted(zip(lista_productos,cantidades)))
+
+        # -- Revision listas para marcar el estado del ingreso -- #
+        ## --- Opcion 1, Revision de bloque --- ##
+        if lista_organizada_compra != lista_organizada_ingreso:
+            print("pendiente revision")
+
+        print(lista_organizada_compra)
+        print(lista_organizada_ingreso)
+
+        ## --- Opcion 2, Revision paso a paso --- ##
+        if len(lista_organizada_compra) != len(lista_organizada_ingreso):
+            if len(lista_organizada_compra) > len(lista_organizada_ingreso):
+                print("Estado: pendiente revision")
+                print("Notas: Faltan productos por recibir")
+                # Se pueden almancenar en variable para luego notificar al usuario
+            elif len(lista_organizada_compra) < len(lista_organizada_ingreso):
+                print("Estado: pendiente revision")
+                print("Notas: Se recibieron productos de mas")
+                # Se pueden almancenar en variable para luego notificar al usuario
+        else:
+            for z in range (len(lista_organizada_compra)):
+                if lista_organizada_compra[z] == lista_organizada_ingreso[z]:
+                    print("Posicion " + str(z) + "en orden")
+                    # Se pueden almancenar en variable para luego notificar al usuario
+                else:
+                    print("pendiente revision en" + str(z))
+                    # Se pueden almancenar en variable para luego notificar al usuario
+        
+
 
         mensaje = "Se ha creado un nuevo producto con éxito"
         ##db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades)
