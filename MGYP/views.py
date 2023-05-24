@@ -111,13 +111,16 @@ def ingreso_productos(request):
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
         return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': ''})
     else:
-        lista_productos_temp = productos.splitLines()
+        lista_productos_temp = productos.splitlines() 
+        compra_objeto = Compras.objects.get(id_compra=id_compra)
+        lista_pr_compra = compra_objeto.lista_productos
+        print(lista_pr_compra)
         lista_productos = " ".join(Counter(lista_productos_temp).keys())
         cantidades = " ".join(Counter(lista_productos_temp).values())
 
         mensaje = "Se ha creado un nuevo producto con éxito"
-        db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades)
-        db_recepcion.save()
+        ##db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades)
+        ##db_recepcion.save()
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
         return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': mensaje})
 
