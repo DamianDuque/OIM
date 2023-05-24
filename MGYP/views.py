@@ -97,7 +97,7 @@ def nuevo_producto(request):
 
 @login_required(login_url='../login/')
 def historial(request):
-    actividad_obj = Actividad.objects.all()
+    actividad_obj = Actividad.objects.all().order_by('-fecha_actividad')
     return render(request, 'historial.html', {'actividad': actividad_obj})
 
 @login_required(login_url='../login/')
@@ -135,37 +135,37 @@ def ingreso_productos(request):
         lista_organizada_ingreso = list(sorted(zip(lista_productos,cantidades)))
 
         # -- Revision listas para marcar el estado del ingreso -- #
-        ## --- Opcion 1, Revision de bloque --- ##
-        if lista_organizada_compra != lista_organizada_ingreso:
-            print("pendiente revision")
-
-        print(lista_organizada_compra)
-        print(lista_organizada_ingreso)
 
         ## --- Opcion 2, Revision paso a paso --- ##
         if len(lista_organizada_compra) != len(lista_organizada_ingreso):
             if len(lista_organizada_compra) > len(lista_organizada_ingreso):
-                print("Estado: pendiente revision")
-                print("Notas: Faltan productos por recibir")
+                estado_recepcion = "pendiente por revision"
+                notas_recepcion = "Notas: Faltan productos por recibir."
                 # Se pueden almancenar en variable para luego notificar al usuario
             elif len(lista_organizada_compra) < len(lista_organizada_ingreso):
-                print("Estado: pendiente revision")
-                print("Notas: Se recibieron productos de mas")
-                # Se pueden almancenar en variable para luego notificar al usuario
+                estado_recepcion = "pendiente por revision"
+                print("Notas: Se recibieron productos de más.")
+                # Se pueden almacenar en variable para luego notificar al usuario
         else:
-            for z in range (len(lista_organizada_compra)):
+            if lista_organizada_compra == lista_organizada_ingreso:
+                estado_recepcion = "OK"
+                notas_recepcion = "Notas: Todo en orden. Productos y cantidades coinciden."
+            '''for z in range (len(lista_organizada_compra)):
                 if lista_organizada_compra[z] == lista_organizada_ingreso[z]:
                     print("Posicion " + str(z) + "en orden")
                     # Se pueden almancenar en variable para luego notificar al usuario
                 else:
                     print("pendiente revision en" + str(z))
-                    # Se pueden almancenar en variable para luego notificar al usuario
+                    # Se pueden almancenar en variable para luego notificar al usuario'''
         
 
 
         mensaje = "Se ha creado un nuevo producto con éxito"
-        ##db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades)
-        ##db_recepcion.save()
+        db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades, estado_recepcion=estado_recepcion, notas_recepcion=notas_recepcion)
+        db_recepcion.save()
+        
+        db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos=lista_productos, cantidades_productos=cantidades)
+        db_inventario.save()
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
         return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': mensaje})
 

@@ -83,9 +83,8 @@ class Inventario(models.Model):
 		Recepcion, null=True, blank=True, on_delete=models.CASCADE)
 	id_bodega = models.ForeignKey(
 		Bodega, null=False, blank=False, on_delete=models.CASCADE)
-	Producto_id_producto = models.ForeignKey(
-		Producto, null=False, blank=False, on_delete=models.CASCADE)
-	cantidad_producto = models.PositiveIntegerField(default=0)
+	lista_productos = models.CharField(max_length=5000, null=False)
+	cantidades_productos = models.CharField(max_length=5000, null=False)
 	fecha_ingreso = models.DateTimeField(auto_now_add=True)
 
 
