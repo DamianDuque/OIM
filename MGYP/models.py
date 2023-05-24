@@ -11,62 +11,66 @@ class Empleado(models.Model):
 
 
 class Producto(models.Model):
-	id_producto = models.AutoField(primary_key=True, blank=False)
-	codigo_de_barras = models.CharField(max_length=45, null=False)
+	codigo_de_barras = models.CharField(primary_key=True, unique=True, max_length=45, null=False)
 	nombre = models.CharField(max_length=45, null=False)
 	descripcion = models.CharField(max_length=100, null=False)
 	peso = models.DecimalField(decimal_places=2, max_digits=20, null=False)
 
 class Compras(models.Model):
-	id_generico_1 = models.AutoField(primary_key=True, blank=False)
-	id_compra = models.CharField(max_length=45, null=False)
+	id_compra = models.AutoField(primary_key=True, blank=False)
 	Empleado_id_empleado = models.ForeignKey(
 		Empleado, null=False, blank=False, on_delete=models.CASCADE)
 	proveedor = models.CharField(max_length=45, null=False)
-	Producto_id_producto = models.ForeignKey(
-		Producto, null=False, blank=False, on_delete=models.CASCADE)
-	cantidad_producto = models.PositiveIntegerField(default=0)
+	lista_productos = models.CharField(max_length=5000, null=False)
+	cantidad_producto = models.CharField(max_length=5000, null=False)
 	total_compra = models.PositiveIntegerField(default=0)
+	fecha_compra = models.DateTimeField(auto_now_add=False)
+	estado_compra = models.CharField(max_length=45, null=False, blank=False, choices=(
+		('por recibir', 'por recibir'), ('recibida', 'recibida')))
 
+class Bodega(models.Model):
+	id_bodega = models.AutoField(primary_key=True, blank=False)
+	capacidad = models.PositiveIntegerField(default= 0, null=False)
+	capacidad_max = models.PositiveIntegerField(default= 2000, null=False)
+	esta_lleno = models.BooleanField(default= False, null=False)
 
 class Recepcion(models.Model):
-	Compras_id_generico_1 = models.ForeignKey(
+	id_compra = models.ForeignKey(
 		Compras, null=False, blank=False, on_delete=models.CASCADE)
-	id_generico_2 = models.AutoField(primary_key=True, blank=False)
-	id_recepcion = models.CharField(max_length=45, null=False)
-	Empleado_id_empleado = models.ForeignKey(
+	id_recepcion = models.AutoField(primary_key=True, blank=False)
+	id_bodega = models.ForeignKey(
+		Bodega, null=False, blank=False, on_delete=models.CASCADE)
+	id_empleado = models.ForeignKey(
 		Empleado, null=False, blank=False, on_delete=models.CASCADE)
-	Producto_id_producto = models.ForeignKey(
-		Producto, null=False, blank=False, on_delete=models.CASCADE)
-	cantidad_producto = models.PositiveIntegerField(default=0)
+	lista_productos = models.CharField(max_length=5000, null=False)
+	cantidades_productos = models.CharField(max_length=5000, null=False)
 	fecha_ingreso = models.DateTimeField(auto_now_add=True)
 	estado_recepcion = models.CharField(max_length=45, null=False, blank=False, choices=(
-		('por recibir', 'por recibir'), ('recibido', 'recibido'), ('pendiente por revision', 'pendiente por revision')))
+		('OK', 'OK'), ('pendiente por revision', 'pendiente por revision')))
 	notas_recepcion = models.CharField(max_length=45, null=False)
 
 
+
+
+
 class Ventas(models.Model):
-	id_generico_3 = models.AutoField(primary_key=True, blank=False)
-	id_venta = models.CharField(max_length=45, null=False)
-	Empleado_id_empleado = models.ForeignKey(
+	id_venta = models.AutoField(primary_key=True, blank=False)
+	id_empleado = models.ForeignKey(
 		Empleado, null=False, blank=False, on_delete=models.CASCADE)
 	cliente = models.CharField(max_length=45, null=False)
-	Producto_id_producto = models.ForeignKey(
-		Producto, null=False, blank=False, on_delete=models.CASCADE)
-	cantidad_producto = models.PositiveIntegerField(default=0)
+	lista_productos = models.CharField(max_length=5000, null=False)
+	cantidades_productos = models.CharField(max_length=5000, null=False)
 	total_venta = models.PositiveIntegerField(default=0)
 
 
 class Entregas(models.Model):
-	Ventas_id_generico_3 = models.ForeignKey(
+	id_venta = models.ForeignKey(
 		Ventas, null=False, blank=False, on_delete=models.CASCADE)
-	id_generico_4 = models.AutoField(primary_key=True, blank=False)
-	id_entrega = models.CharField(max_length=45, null=False)
-	Empleado_id_empleado = models.ForeignKey(
+	id_entrega = models.AutoField(primary_key=True, blank=False)
+	id_empleado = models.ForeignKey(
 		Empleado, null=False, blank=False, on_delete=models.CASCADE)
-	Producto_id_producto = models.ForeignKey(
-		Producto, null=False, blank=False, on_delete=models.CASCADE)
-	cantidad_producto = models.PositiveIntegerField(default=0)
+	lista_productos = models.CharField(max_length=5000, null=False)
+	cantidades_productos = models.CharField(max_length=5000, null=False)
 	fecha_despacho = models.DateTimeField(auto_now_add=True)
 	estado_entrega = models.CharField(max_length=45, null=False, blank=False, choices=(
 		('por entregar', 'por entregar'), ('entregado', 'entregado'), ('pendiente por revision', 'pendiente por revision')))
@@ -74,13 +78,15 @@ class Entregas(models.Model):
 
 
 class Inventario(models.Model):
-	id_generico_5 = models.AutoField(primary_key=True, blank=False)
-	Recepcion_id_generico_2 = models.ForeignKey(
+	id_inventario = models.AutoField(primary_key=True, blank=False)
+	id_recepcion = models.ForeignKey(
 		Recepcion, null=True, blank=True, on_delete=models.CASCADE)
-	id_bodega = models.PositiveIntegerField(null=False)
+	id_bodega = models.ForeignKey(
+		Bodega, null=False, blank=False, on_delete=models.CASCADE)
 	Producto_id_producto = models.ForeignKey(
 		Producto, null=False, blank=False, on_delete=models.CASCADE)
 	cantidad_producto = models.PositiveIntegerField(default=0)
+	fecha_ingreso = models.DateTimeField(auto_now_add=True)
 
 
 class Actividad(models.Model):

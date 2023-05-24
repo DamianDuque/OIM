@@ -26,6 +26,8 @@ urlpatterns = [
     path('logout/', MGYPViews.logoutUser),
     path('inventario/', MGYPViews.inventario),
     path('productos/', MGYPViews.productos),
-    path('actividad/', MGYPViews.actividad),
+    path('historial/', MGYPViews.historial),
+    path('ingreso_productos/', MGYPViews.ingreso_productos),
+    path('ingreso_productos/next', MGYPViews.ingreso_productos_next),
     path('productos/nuevo_producto', MGYPViews.nuevo_producto),
 ]

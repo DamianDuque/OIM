@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es" class="cuerpo_resto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' href='{% static "css/estilos_prueba.css" %}' rel="stylesheet">
+    <link rel="shortcut icon" href="https://i.postimg.cc/fLgnjGQb/Mundialgyp-LOGO.png">
+    <link href="//db.onlinewebfonts.com/c/c25432bd2c16dfe9cbff2d2968e73fcb?family=AllRoundGothicW01-Demi"
+        rel="stylesheet" type="text/css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title> Inventario - MGYP</title>
+</head>
+
+<body class="cuerpo_resto">
+
+    {% include "navbar.html" %}
+
+    {% include "barra_navegacion_iniciada.html" %}
+
+    <div class="" style="text-align: center; padding-top:3.5em;">
+        <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
+            src="https://i.postimg.cc/RFDYR0L6/banner-inventario.png" border="0px">
+    </div>
+    <div align="center" style="padding-top:2em; padding-bottom: 2em;">
+        <div>
+            <a href="../ingreso_productos/" id="rev_pr"><button
+                    style="margin-bottom: 0.5em; padding: 0.5em; border-radius: 0.7em;" class="btn_inv">
+                    <h6>Regresar</h6>
+                </button></a>
+            <form action="../productos/nuevo_producto" method="POST">
+                <h5 align="center" style="padding-bottom:0.5em;">
+                    <div style="margin-top: 1em; margin-bottom: 1.5em;"><strong>Ingrese los siguientes datos</strong>
+                    </div>
+                    <div>
+                        <h4>
+                            <font color="#2bb52b"><b>{{mensaje}}</b></font>
+                        </h4>
+                    </div>
+                    {% csrf_token %}
+                    <table align="center">
+                        <tr>
+                            <td>ID Bodega</td>
+                            <td>Productos</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="form-select" id="id_bodega"
+                                    style="margin-bottom:5px; border: 3px solid #4b4b4b; text-align: center;" size="4"
+                                    aria-label="size 7 select example" type="number" name="id_bodega" required>
+                                    {% for bodega in bodegas%}
+                                    <option value={{bodega.id_bodega}}>
+                                        <font face="Gadugi"> {{bodega.id_bodega}} </font>
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><textarea type="text" rows="1" cols="30" id="productos" name="productos"
+                                    required></textarea></td>
+                            <td style="display: none;">
+                                <select class="form-select" id="hidden_select"
+                                    style="display: none;" size="1"
+                                    aria-label="size 7 select example" type="number" name="id_compra" required>
+                                    <option value={{id_compra}} selected>
+                                        <font face="Gadugi">{{id_compra}}</font>
+                                    </option>
+                                </select>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                </h5>
+                <div style="margin-bottom: 3em;"><a type="submit"><button class="btn_inv">
+                            <h5>Ingresar productos</h5>
+                        </button></a></div>
+            </form>
+        </div>
+
+    </div>
+
+    {% include "footer.html" %}
+
+</body>
+
+</html>

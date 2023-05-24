@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from collections import Counter
 # Create your views here.
 
 def registro(request):
@@ -92,9 +93,42 @@ def nuevo_producto(request):
         db_producto.save()
         db_actividad = Actividad(id_empleado_id=usuarios_obj.id_empleado, tipo_actividad='nuevo producto')
         db_actividad.save()
-    return render(request, 'nuevo_producto.html', {'mensaje': mensaje})
+        return render(request, 'nuevo_producto.html', {'mensaje': mensaje})
 
 @login_required(login_url='../login/')
-def actividad(request):
+def historial(request):
     actividad_obj = Actividad.objects.all()
-    return render(request, 'actividad.html', {'actividad': actividad_obj})
+    return render(request, 'historial.html', {'actividad': actividad_obj})
+
+@login_required(login_url='../login/')
+def ingreso_productos(request):
+    usuarios_obj = Empleado.objects.get(nombre=request.user)
+    try:
+        id_bodega = request.POST['id_bodega']
+        productos = request.POST['productos']
+        id_compra = request.POST['id_compra']
+    except:
+        compras_obj = Compras.objects.filter(estado_compra='por recibir')
+        return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': ''})
+    else:
+        lista_productos_temp = productos.splitLines()
+        lista_productos = " ".join(Counter(lista_productos_temp).keys())
+        cantidades = " ".join(Counter(lista_productos_temp).values())
+
+        mensaje = "Se ha creado un nuevo producto con éxito"
+        db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades)
+        db_recepcion.save()
+        compras_obj = Compras.objects.filter(estado_compra='por recibir')
+        return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': mensaje})
+
+@login_required(login_url='../login/')
+def ingreso_productos_next(request):
+    try:
+        id_compra = request.POST['id_compra']
+    except:
+        compras_obj = Compras.objects.filter(estado_compra='por recibir')
+        return render(request, 'ingreso_productos.html', {'compras': compras_obj})
+    else:
+        bodegas_obj = Bodega.objects.all()
+        compras_obj = Compras.objects.get(id_compra=id_compra)
+        return render(request, 'ingreso_productos_next.html', {'compras': compras_obj, 'bodegas': bodegas_obj, 'id_compra':id_compra})
