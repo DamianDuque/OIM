@@ -30,4 +30,6 @@ urlpatterns = [
     path('ingreso_productos/', MGYPViews.ingreso_productos),
     path('ingreso_productos/next', MGYPViews.ingreso_productos_next),
     path('productos/nuevo_producto', MGYPViews.nuevo_producto),
+    path('despacho_productos/', MGYPViews.despacho_productos),
+    path('despacho_productos/next', MGYPViews.despacho_productos_next),
 ]

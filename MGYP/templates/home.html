@@ -27,103 +27,170 @@
         <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025 src="https://i.postimg.cc/8z258rrm/Banner-ppal.png"
             border="0px">
     </div>
-    <div style="padding-top:2em;">
+    <div style="padding-top:4em; padding-bottom: 3em;">
         <div>
             <h2 align="center" style="padding-bottom:0.5em;">
-                <b>
-                    <font face="Gadugi"> {{nombre}}, ¡Bienvenid@ a <b class="color1">OIM!</b>
-                        </font>
-                </b>
+                <font face="Gadugi"> <b>Usuario:</b> {{nombre}} <b> | Rol:</b> {{rol}}</b>
+                </font>
             </h2>
         </div>
-
-        <div style="padding-bottom: 15px; padding-left:13em; padding-right: 13em;">
-            <div class="color4 borde1" style="padding: 1em;">
-                <div>
-                    <h4 align="center" class="center mt-4 mb-4">
-                        <font face="Gadugi" color="#0000">Gracias por contar con nosotros en la búsqueda de un futuro
-                            más sostenible y ecológicamente amigable.</font>
-                    </h4>
-                    <h4 align="center" class="center mt-4 mb-4">
-                        <font face="Gadugi" color="#0000">A través de esta página podrás realizar un seguimiento los
-                            puntos que has obtenido 🎁, revisar la cantidad de residuos recogidos usando el sistema ♻️,
-                            y ver tu historial de uso del sistema <b class="color1">Eco</b><b class="color2">Mind</b> ⌚.
-                        </font>
-                    </h4>
-                </div>
-            </div>
-        </div>
-
         <div style="padding-left: 12em; padding-top: 25px; padding-bottom:25px;">
-
-
-
-
-
-
             <table style="text-align:center">
                 <tr>
-                    <th><a id="Inventario1" href="../inventario/">
-                            <img class="box" id="etiquetado2" width="150" alt="WhatsApp Logo"
+                    <th><a href="../inventario/">
+                            <img id="inventario1" style="border: 7px solid rgb(66, 66, 66);
+                            background: #636363;
+                            border-radius: 1em;
+                            padding: 1em;
+                            margin-left: 2em;
+                            transition: .3s ease all;" width="150" alt="WhatsApp Logo"
                                 src="https://i.postimg.cc/qRrrksw4/inventario-disponible.png" /></a></th>
-                    <th><a id="Ingreso1" href="../clasificado/">
-                            <img class="box" id="clasificado2" width="150" alt="WhatsApp Logo"
+                    <th><a href="../ingreso_productos/">
+                            <img id="ingreso1" style="border: 7px solid rgb(66, 66, 66);
+                            background: #636363;
+                            border-radius: 1em;
+                            padding: 1em;
+                            margin-left: 2em;
+                            transition: .3s ease all;" width="150" alt="WhatsApp Logo"
                                 src="https://i.postimg.cc/WtRr1p9B/carretilla.png" /></a></th>
-                    <th><a id="Despacho1" href="../mi_actividad/">
-                            <img class="box" id="actividad2" width="150" alt="WhatsApp Logo"
+                    <th><a  href="../despacho_productos/">
+                            <img id="despacho1" style="border: 7px solid rgb(66, 66, 66);
+                            background: #636363;
+                            border-radius: 1em;
+                            padding: 1em;
+                            margin-left: 2em;
+                            transition: .3s ease all;" width="150" alt="WhatsApp Logo"
                                 src="https://i.postimg.cc/XJD09R37/enviado.png" /></a></th>
 
-                    <th><a id="Actividad1" href="../mis_puntos/">
-                            <img class="box" id="puntos2" width="150" alt="WhatsApp Logo"
+                    <th><a  href="../historial/">
+                            <img id="historial1" style="border: 7px solid rgb(66, 66, 66);
+                            background: #636363;
+                            border-radius: 1em;
+                            padding: 1em;
+                            margin-left: 2em;
+                            transition: .3s ease all;" width="150" alt="WhatsApp Logo"
                                 src="https://i.postimg.cc/X7YQRrwh/expediente.png" /></a></th>
 
 
-                    <th><a id="Productos1" href="../store/">
-                            <img class="box" id="filtrar2" width="150" alt="WhatsApp Logo"
+                    <th><a  href="../productos/">
+                            <img id="productos1" style="border: 7px solid rgb(66, 66, 66);
+                            background: #636363;
+                            border-radius: 1em;
+                            padding: 1em;
+                            margin-left: 2em;
+                            transition: .3s ease all;" width="150" alt="WhatsApp Logo"
                                 src="https://i.postimg.cc/SQ1jjXYc/regalo.png" /></a></th>
 
                 </tr>
-                <tr>
-                    <th style="padding-left:1.5em; padding-top: 1em;">
-                        <font face="" color="#0000" id="etiquetado">Inventario</font>
+                <tr align="center">
+                    <th style="padding-left: 1.9em; padding-top: 1em;">
+                        <font face="" color="#0000" id="inventario_ab" style="font-size: 20px;">Inventario</font>
                     </th>
-                    <th style="padding-left:1.5em; padding-top: 1em;">
-                        <font face="" color="#0000" id="clasificado" style="font-size: 18px;">Clasificado <br>de
-                            residuos</font>
+                    <th style="padding-left: 2em; padding-top: 1em;">
+                        <font face="" color="#0000" id="ingreso_ab" style="font-size: 20px;">Ingreso de <br> productos
+                        </font>
                     </th>
-                    <th style="padding-left:1.5em;">
-                        <font face="" color="#0000" id="actividad">Mi actividad</font>
-                    </th>
-
-                    <th style="padding-left:1.5em;">
-                        <font face="" color="#0000" id="puntos">Mis Puntos</font>
+                    <th style="padding-left: 2.3em;">
+                        <font face="" color="#0000" id="despacho_ab" style="font-size: 20px;">Despacho de <br> productos
+                        </font>
                     </th>
 
-                    <th style="padding-left:1.5em;">
-                        <font face="" color="#0000" id="filtrar">Tienda</font>
+                    <th style="padding-left: 2.2em;">
+                        <font face="" color="#0000" id="historial_ab" style="font-size: 20px;">Historial <br> de
+                            acciones</font>
+                    </th>
+
+                    <th style="padding-left: 2em;">
+                        <font face="" color="#0000" id="productos_ab" style="font-size: 20px;">Productos</font>
                     </th>
                 </tr>
-
-
             </table>
 
+            <script>
+                const inventario3=document.querySelector('#inventario1');
+                const ingreso3=document.querySelector('#ingreso1');
+                const despacho3=document.querySelector('#despacho1');
+                const historial3=document.querySelector('#historial1');
+                const productos3=document.querySelector('#productos1');
 
+                const inventario_t=document.querySelector('#inventario_ab');
+                const ingreso_t=document.querySelector('#ingreso_ab');
+                const despacho_t=document.querySelector('#despacho_ab');
+                const historial_t=document.querySelector('#historial_ab');
+                const productos_t=document.querySelector('#productos_ab');
 
+                inventario3.addEventListener('mousemove', e => {
+                        inventario3.style.transition='.4s ease all';
+                        inventario3.style.backgroundColor='#505050';
+                        inventario_t.style.transition='.4s ease all';
+                        inventario_t.style.color = '#424242';
+                    });
 
+                inventario3.addEventListener('mouseout', e => {
+                    inventario3.style.transition='.4s ease all';
+                    inventario3.style.backgroundColor='#636363';
+                    inventario_t.style.transition='.4s ease all';
+                    inventario_t.style.color = '#000000';
+                });
 
+                ingreso3.addEventListener('mousemove', e => {
+                        ingreso3.style.transition='.4s ease all';
+                        ingreso3.style.backgroundColor='#505050';
+                        ingreso_t.style.transition='.4s ease all';
+                        ingreso_t.style.color = '#424242';
+                    });
+                
+                ingreso3.addEventListener('mouseout', e => {
+                    ingreso3.style.transition='.4s ease all';
+                    ingreso3.style.backgroundColor='#636363';
+                    ingreso_t.style.transition='.4s ease all';
+                    ingreso_t.style.color = '#000000';
+                });
 
+                despacho3.addEventListener('mousemove', e=> {
+                        despacho3.style.transition='.4s ease all';
+                        despacho3.style.backgroundColor='#505050';
+                        despacho_t.style.transition='.4s ease all';
+                        despacho_t.style.color = '#424242';
+                    });
+                
+                despacho3.addEventListener('mouseout', e => {
+                    despacho3.style.transition='.4s ease all';
+                    despacho3.style.backgroundColor='#636363';
+                    despacho_t.style.transition='.4s ease all';
+                    despacho_t.style.color = '#000000';
+                });
 
+                productos3.addEventListener('mousemove', e=> {
+                        productos3.style.transition='.4s ease all';
+                        productos3.style.backgroundColor='#505050';
+                        productos_t.style.transition='.4s ease all';
+                        productos_t.style.color = '#424242';
+                    });
+                
+                productos3.addEventListener('mouseout', e => {
+                    productos3.style.transition='.4s ease all';
+                    productos3.style.backgroundColor='#636363';
+                    productos_t.style.transition='.4s ease all';
+                    productos_t.style.color = '#000000';
+                });
+                
+                historial3.addEventListener('mousemove', e=> {
+                    historial3.style.transition='.4s ease all';
+                    historial3.style.backgroundColor='#505050';
+                    historial_t.style.transition='.4s ease all';
+                    historial_t.style.color = '#424242';
+                });
 
+                historial3.addEventListener('mouseout', e => {
+                    historial3.style.transition='.4s ease all';
+                    historial3.style.backgroundColor='#636363';
+                    historial_t.style.transition='.4s ease all';
+                    historial_t.style.color = '#000000';
+                });
 
-        </div>
-        <div style="padding-left:10em; padding-right: 13em; padding-top: 3em; padding-bottom: 4em;">
-            <table>
-                <tr>
-                    <th><img width="100%" src="https://i.postimg.cc/66kCL0b9/Frase-Eco-Mind.png"></th>
-                    <th><img width="550" src="https://i.postimg.cc/VLhTcQhw/Logo-Eco-Mind-Original.png"></th>
-                </tr>
-
-            </table>
+                
+            </script>
         </div>
     </div>
 

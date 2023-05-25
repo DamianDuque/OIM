@@ -25,15 +25,15 @@
 
     <div class="" style="text-align: center; padding-top:3.5em;">
         <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
-            src="https://i.postimg.cc/L6QZV2hg/banner-ingreso-productos.png" border="0px">
+            src="https://i.postimg.cc/MKGPRwp4/banner-despacho.png" border="0px">
     </div>
     <div align="center" style="padding-top:2em; padding-bottom: 2em;">
         <div>
-            <a href="../ingreso_productos/" id="rev_pr"><button
+            <a href="../despacho_productos/" id="rev_pr"><button
                     style="margin-bottom: 0.5em; padding: 0.5em; border-radius: 0.7em;" class="btn_inv">
                     <h6>Regresar</h6>
                 </button></a>
-            <form action="../ingreso_productos/" method="POST">
+            <form action="../despacho_productos/" method="POST">
                 <h5 align="center" style="padding-bottom:0.5em;">
                     <div style="margin-top: 1em; margin-bottom: 1.5em;"><strong>Ingrese los siguientes datos</strong>
                     </div>
@@ -45,29 +45,24 @@
                     {% csrf_token %}
                     <table align="center">
                         <tr>
-                            <td>ID Bodega</td>
                             <td>Productos</td>
                         </tr>
                         <tr>
-                            <td>
-                                <select class="form-select" id="id_bodega"
-                                    style="margin-bottom:5px; border: 3px solid #4b4b4b; text-align: center;" size="4"
-                                    aria-label="size 7 select example" type="number" name="id_bodega" required>
-                                    {% for bodega in bodegas%}
-                                    <option value={{bodega.id_bodega}}>
-                                        <font face="Gadugi">Bodega {{bodega.id_bodega}} </font>
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td><textarea type="text" rows="1" cols="30" id="productos" name="productos"
+                            <td><textarea type="text" rows="5" cols="30" id="productos" name="productos"
                                     required></textarea></td>
                             <td style="display: none;">
                                 <select class="form-select" id="hidden_select"
                                     style="display: none;" size="1"
-                                    aria-label="size 7 select example" type="number" name="id_compra" required>
-                                    <option value={{id_compra}} selected>
-                                        <font face="Gadugi">{{id_compra}}</font>
+                                    aria-label="size 7 select example" type="number" name="id_venta" required>
+                                    <option value={{id_venta}} selected>
+                                        <font face="Gadugi">{{id_venta}}</font>
+                                    </option>
+                                </select>
+                                <select class="form-select" id="hidden_select"
+                                    style="display: none;" size="1"
+                                    aria-label="size 7 select example" type="number" name="id_bodega" required>
+                                    <option value={{id_bodega}} selected>
+                                        <font face="Gadugi">{{id_bodega}}</font>
                                     </option>
                                 </select>
                             </td>

@@ -55,8 +55,8 @@
 	}
 
 	.box {
-		border: 7px solid rgb(51, 87, 153);
-		background: #70c6ff;
+		border: 7px solid rgb(41, 41, 41);
+		background: #424242;
 		border-radius: 1em;
 		padding: 1em;
 		margin-left: 2em;
@@ -64,15 +64,19 @@
 
 	}
 
+	.box:hover {
+		background: rgb(66, 66, 66);
+	}
+
 	.color3 {
 		background: #feffce;
 	}
 
 	.color4 {
-		background: #ade8f3;
+		background: #5c5c5c;
 		border-radius: 1em;
 		padding: 3px;
-		border: 4px solid #264d53;
+		border: 4px solid #2e2e2e;
 	}
 
 	.color1 {
@@ -81,11 +85,6 @@
 
 	.color2 {
 		color: rgb(0, 68, 3);
-	}
-
-
-	.box:hover {
-		background: rgb(79, 123, 209);
 	}
 
 	.cuerpo_login {

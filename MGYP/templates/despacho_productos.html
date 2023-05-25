@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es" class="cuerpo_resto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' href='{% static "css/estilos_prueba.css" %}' rel="stylesheet">
+    <link rel="shortcut icon" href="https://i.postimg.cc/fLgnjGQb/Mundialgyp-LOGO.png">
+    <link href="//db.onlinewebfonts.com/c/c25432bd2c16dfe9cbff2d2968e73fcb?family=AllRoundGothicW01-Demi"
+        rel="stylesheet" type="text/css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title> Inventario - MGYP</title>
+</head>
+
+<body class="cuerpo_resto">
+
+    {% include "navbar.html" %}
+
+    {% include "barra_navegacion_iniciada.html" %}
+
+    <div class="" style="text-align: center; padding-top:3.5em;">
+        <img style="box-shadow: 0px 3px 5px rgb(0, 0, 0)" width=1025
+            src="https://i.postimg.cc/MKGPRwp4/banner-despacho.png" border="0px">
+    </div>
+    <div align="center" style="padding-top:2em; padding-bottom: 2em;">
+        <div>
+            <form action="/despacho_productos/next" method="POST">
+                {% csrf_token %}
+                <div style="padding-top:0em;padding-bottom:2em;">
+                    <div id="venta_sel" style="padding-top: 2em;">
+                        <div style="text-align: center; padding-bottom: 1.5em;">
+                            <div>
+                                <h4>
+                                    <font color={{color_mensaje}}><b>{{mensaje}}</b></font>
+                                </h4>
+                            </div>
+                            <div style="padding-bottom:1em;">
+                                <h4>
+                                    <font color={{color_mensaje}}><b>{{mensaje_2}}</b></font>
+                                </h4>
+                            </div>
+                            <h4>
+                                <font face="Gadugi" color="#0000"><b>Seleccione una venta</b></font>
+                            </h4>
+                        </div>
+                        <div style="padding-left: 15em; padding-right: 15em;">
+                            <select class="form-select" id="id_venta"
+                                style="margin-bottom:5px; border: 3px solid #4b4b4b; text-align: center;" size="7"
+                                aria-label="size 7 select example" type="number" name="id_venta" required>
+                                {% for venta in ventas %}
+                                <option value={{venta.id_venta}}>
+                                    <font face="Gadugi">ID venta: {{venta.id_venta}} | Cliente: {{venta.cliente}} |
+                                        Total: {{venta.total_venta}} | Fecha: {{venta.fecha_venta}}</font>
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="padding-top: 2em;">
+                            <button id="btn_hide" class="btn_inv">
+                                <h5>Siguiente</h5>
+                            </button></td>
+                        </div>
+                    </div>
+
+                    <div id="bodega_sel">
+                        <h2 align="center" style="padding-bottom:3em;padding-top: 2em;">
+                            <strong>Seleccione una bodega</strong>
+                            <div style="margin-top: 1em; margin-bottom: 0.8em; padding-left: 18em;padding-right: 18em;">
+                                <select class="form-select" id="id_bodega"
+                                    style="margin-bottom:5px; border: 3px solid #4b4b4b; text-align: center;" size="4"
+                                    aria-label="size 7 select example" type="number" name="id_bodega" required>
+                                    {% for bodega in bodegas %}
+                                    <option value={{bodega.id_bodega}}>
+                                        <font face="Gadugi">Bodega {{bodega.id_bodega}} </font>
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </h2>
+                        <a type="submit"><button class="btn_inv">
+                                <h5>Siguiente</h5>
+                            </button></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% include "footer.html" %}
+
+    <script>
+        const bodega_sel = document.querySelector('#bodega_sel');
+        bodega_sel.style.display = 'none';
+        const venta_sel = document.querySelector('#venta_sel');
+        const btn_hide = document.querySelector('#btn_hide');
+
+        btn_hide.addEventListener('click', e => {
+            venta_sel.style.display = 'none';
+            bodega_sel.style.display = 'block';
+        })
+
+
+    </script>
+</body>
+
+</html>

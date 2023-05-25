@@ -64,12 +64,13 @@ def logoutUser(request):
 @login_required(login_url='../login/')
 def home(request):
     usuarios_obj = Empleado.objects.get(nombre=request.user)
-    return render(request, 'home.html', {'nombre': usuarios_obj.nombre})
+    return render(request, 'home.html', {'nombre': usuarios_obj.nombre, 'rol': usuarios_obj.rol})
 
 @login_required(login_url='../login/')
 def inventario(request):
     usuarios_obj = Empleado.objects.get(nombre=request.user)
-    return render(request, 'inventario.html', {'nombre': usuarios_obj.nombre})
+    bodegas_obj = Bodega.objects.all()
+    return render(request, 'inventario.html', {'nombre': usuarios_obj.nombre, 'bodegas':bodegas_obj})
 
 @login_required(login_url='../login/')
 def productos(request):
@@ -91,8 +92,24 @@ def nuevo_producto(request):
         mensaje = "Se ha creado un nuevo producto con éxito"
         db_producto = Producto(codigo_de_barras=codigo_barras, nombre=nombre, descripcion=descripcion, peso=peso)
         db_producto.save()
+        
         db_actividad = Actividad(id_empleado_id=usuarios_obj.id_empleado, tipo_actividad='nuevo producto')
         db_actividad.save()
+        
+        inventario_obj = Inventario.objects.all()
+        if len(inventario_obj) != 0:
+            
+            for inventario in inventario_obj:
+                inventario.lista_productos = inventario.lista_productos+" "+codigo_barras
+                inventario.save() ## update lista_productos
+        else:
+            
+            bodega_obj = Bodega.objects.all()
+            
+            for bodega in bodega_obj:
+                db_inventario = Inventario(id_bodega_id = bodega.id_bodega, lista_productos = codigo_barras)
+                db_inventario.save()
+            
         return render(request, 'nuevo_producto.html', {'mensaje': mensaje})
 
 @login_required(login_url='../login/')
@@ -133,41 +150,103 @@ def ingreso_productos(request):
 
         # -- Organizar lista scaneada para ingresar -- #
         lista_organizada_ingreso = list(sorted(zip(lista_productos,cantidades)))
-
+        estado_recepcion_2 = 'pendiente por revision'
+        notas_recepcion_2 = ""
+        mensaje = ""
+        color = ""
         # -- Revision listas para marcar el estado del ingreso -- #
 
         ## --- Opcion 2, Revision paso a paso --- ##
         if len(lista_organizada_compra) != len(lista_organizada_ingreso):
             if len(lista_organizada_compra) > len(lista_organizada_ingreso):
-                estado_recepcion = "pendiente por revision"
-                notas_recepcion = "Notas: Faltan productos por recibir."
+                
+                estado_recepcion_2 = 'pendiente por revision'
+                notas_recepcion_2 = "Notas: Faltan productos por recibir."
+                mensaje = "Recepción realizada"
+                mensaje_2 = "¡Faltan productos por recibir!"
+                color = "#c42727"
                 # Se pueden almancenar en variable para luego notificar al usuario
             elif len(lista_organizada_compra) < len(lista_organizada_ingreso):
-                estado_recepcion = "pendiente por revision"
-                print("Notas: Se recibieron productos de más.")
+                
+                estado_recepcion_2 = 'pendiente por revision'
+                notas_recepcion_2 = "Notas: Se recibieron productos de más."
+                mensaje = "Recepción realizada"
+                mensaje_2 = "¡Se recibieron productos de más!"
+                color = "#c42727"
                 # Se pueden almacenar en variable para luego notificar al usuario
         else:
             if lista_organizada_compra == lista_organizada_ingreso:
-                estado_recepcion = "OK"
-                notas_recepcion = "Notas: Todo en orden. Productos y cantidades coinciden."
-            '''for z in range (len(lista_organizada_compra)):
-                if lista_organizada_compra[z] == lista_organizada_ingreso[z]:
-                    print("Posicion " + str(z) + "en orden")
-                    # Se pueden almancenar en variable para luego notificar al usuario
-                else:
-                    print("pendiente revision en" + str(z))
-                    # Se pueden almancenar en variable para luego notificar al usuario'''
+                
+                estado_recepcion_2 = 'OK'
+                notas_recepcion_2 = "Notas: Todo en orden. Productos y cantidades coinciden."
+                mensaje = "Recepción realizada satisfactoriamente"
+                mensaje = "¡Todo en orden!"
+                color = "#2bb52b"
+            else:
+                estado_recepcion_2 = 'pendiente por revision'
+                notas_recepcion_2 = "Notas: Los productos recibidos no coinciden con los comprados."
+                mensaje = "Recepción realizada"
+                mensaje_2 = "¡Los productos recibidos no coinciden con los comprados!"
+                color = "#c42727"
         
-
-
-        mensaje = "Se ha creado un nuevo producto con éxito"
-        db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades, estado_recepcion=estado_recepcion, notas_recepcion=notas_recepcion)
+        db_recepcion = Recepcion(id_compra_id=id_compra, id_bodega_id=id_bodega, id_empleado_id=usuarios_obj.id_empleado, lista_productos=lista_productos, cantidades_productos=cantidades, estado_recepcion=estado_recepcion_2, notas_recepcion=notas_recepcion_2)
         db_recepcion.save()
+
+        inventario_obj = Inventario.objects.get(id_bodega_id = id_bodega)
+        ValorDB = inventario_obj.lista_productos
+        listaDB = ValorDB.split()
+
+        ValorFormulario = productos
+        listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
+
+
+        # Sacar claves unicas y frecuencias
+        lista_productos_DB = list(Counter(listaDB).keys())
+        cantidades_productos_DB = list(Counter(listaDB).values())
+
+        lista_productos_formulario = list(Counter(listaFormulario).keys())
+        cantidades_productos_formulario = list(Counter(listaFormulario).values())
+
+        # -- Organizar lista recibida de compras -- #
+        lista_organizada_DB = list(sorted(zip(lista_productos_DB,cantidades_productos_DB)))
+        lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
+
+        print(lista_organizada_DB)
+        print(lista_organizada_formulario)
+
+
+        for i in range(len(lista_organizada_DB)):
+            for z in range(len(lista_organizada_formulario)):
+                if  lista_organizada_DB[i][0] == lista_organizada_formulario[z][0]:
+                    commonItem = list(lista_organizada_DB[i])
+                    commonItem[1] += lista_organizada_formulario[z][1]
+                    updatedAmount = tuple(commonItem)
+                    lista_organizada_DB[i] = updatedAmount
+                    break
+                else:
+                    continue
+
+        print(lista_organizada_DB)
+
+        updatedList = []
+        for producto in lista_organizada_DB:
+            for u in range(producto[1]):
+                updatedList.append(producto[0])
+        print(updatedList)
+        updatedInventory = " ".join(updatedList)
         
-        db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos=lista_productos, cantidades_productos=cantidades)
-        db_inventario.save()
+        '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
+        db_inventario.save()'''
+
+        inventario_obj_2 = Inventario.objects.get(id_bodega_id = id_bodega)
+        inventario_obj_2.lista_productos = updatedInventory
+        inventario_obj_2.save()
+
+        db_actividad = Actividad(id_empleado_id=usuarios_obj.id_empleado, tipo_actividad='ingreso productos')
+        db_actividad.save()
+
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
-        return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': mensaje})
+        return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': mensaje, 'mensaje_2':mensaje_2, 'color_mensaje':color})
 
 @login_required(login_url='../login/')
 def ingreso_productos_next(request):
@@ -180,3 +259,151 @@ def ingreso_productos_next(request):
         bodegas_obj = Bodega.objects.all()
         compras_obj = Compras.objects.get(id_compra=id_compra)
         return render(request, 'ingreso_productos_next.html', {'compras': compras_obj, 'bodegas': bodegas_obj, 'id_compra':id_compra})
+    
+
+@login_required(login_url='../login/')
+def despacho_productos(request):
+    usuarios_obj = Empleado.objects.get(nombre=request.user)
+    try:
+        id_bodega = request.POST['id_bodega']
+        id_venta = request.POST['id_venta']
+        productos = request.POST['productos']
+    except:
+        ventas_obj = Ventas.objects.filter(estado_venta='por entregar')
+        bodegas_obj = Bodega.objects.all()
+        return render(request, 'despacho_productos.html', {'ventas': ventas_obj, 'mensaje': '', 'bodegas': bodegas_obj})
+    else:
+
+        #Elementos que vienen de la base de datos
+        venta_objeto = Ventas.objects.get(id_venta=id_venta)
+        str_pr_venta = venta_objeto.lista_productos
+        lista_pr_venta = str_pr_venta.split()
+
+        # -- Arreglos de productos y cantidades -- #
+        lista_productos_venta = list(Counter(lista_pr_venta).keys())
+        cantidades_productos_venta = list(Counter(lista_pr_venta).values())
+        # -- Organizar lista recibida de ventas -- #
+        lista_organizada_venta = list(sorted(zip(lista_productos_venta,cantidades_productos_venta)))
+
+        #Elementos que salen del formulario
+        lista_productos_temp = productos.splitlines()
+        
+        # -- Areglos de productos y cantidades -- #
+        lista_productos = list(Counter(lista_productos_temp).keys())
+        cantidades = list(Counter(lista_productos_temp).values())
+
+        # -- Organizar lista scaneada para ingresar -- #
+        lista_organizada_despacho = list(sorted(zip(lista_productos,cantidades)))
+        estado_entrega_2 = 'pendiente por revision'
+        notas_entrega_2 = ""
+        mensaje = ""
+        mensaje_2 = ""
+        color = ""
+        # -- Revision listas para marcar el estado del despacho -- #
+
+        ## --- Opcion 2, Revision paso a paso --- ##
+        if len(lista_organizada_venta) != len(lista_organizada_despacho):
+            if len(lista_organizada_venta) > len(lista_organizada_despacho):
+                
+                estado_entrega_2 = 'pendiente por revision'
+                notas_entrega_2 = "Notas: Faltan productos por despachar."
+                mensaje = "Despacho fallido"
+                mensaje_2 = "¡Faltan productos por despachar!"
+                color = "#c42727"
+                # Se pueden almancenar en variable para luego notificar al usuario
+            elif len(lista_organizada_venta) < len(lista_organizada_despacho):
+                
+                estado_entrega_2 = 'pendiente por revision'
+                notas_entrega_2 = "Notas: Se despacharon productos de más."
+                mensaje = "Despacho realizado"
+                mensaje_2 = "¡Se despacharon productos de más!"
+                color = "#c42727"
+                # Se pueden almacenar en variable para luego notificar al usuario
+        else:
+            if lista_organizada_venta == lista_organizada_despacho:
+                
+                estado_entrega_2 = 'OK'
+                notas_entrega_2 = "Notas: Todo en orden. Productos y cantidades coinciden."
+                mensaje = "Despacho realizado satisfactoriamente"
+                mensaje = "¡Todo en orden!"
+                color = "#2bb52b"
+            else:
+                estado_entrega_2 = 'pendiente por revision'
+                notas_entrega_2 = "Notas: Los productos despachados no coinciden con los vendidos."
+                mensaje = "Despacho realizada"
+                mensaje_2 = "¡Los productos despachados no coinciden con los vendidos!"
+                color = "#c42727"
+        
+        db_entrega = Entregas(id_venta_id=id_venta, id_empleado_id=usuarios_obj.id_empleado, lista_productos= lista_productos, cantidades_productos=cantidades, estado_entrega=estado_entrega_2, notas_entrega=notas_entrega_2)
+        db_entrega.save()
+
+        inventario_obj = Inventario.objects.get(id_bodega_id = id_bodega)
+        ValorDB = inventario_obj.lista_productos
+        listaDB = ValorDB.split()
+
+        ValorFormulario = productos
+        listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
+
+
+        # Sacar claves unicas y frecuencias
+        lista_productos_DB = list(Counter(listaDB).keys())
+        cantidades_productos_DB = list(Counter(listaDB).values())
+
+        lista_productos_formulario = list(Counter(listaFormulario).keys())
+        cantidades_productos_formulario = list(Counter(listaFormulario).values())
+
+        # -- Organizar lista recibida de compras -- #
+        lista_organizada_DB = list(sorted(zip(lista_productos_DB,cantidades_productos_DB)))
+        lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
+
+        print(lista_organizada_DB)
+        print(lista_organizada_formulario)
+
+
+        for i in range(len(lista_organizada_DB)):
+            for z in range(len(lista_organizada_formulario)):
+                if  lista_organizada_DB[i][0] == lista_organizada_formulario[z][0]:
+                    commonItem = list(lista_organizada_DB[i])
+                    commonItem[1] -= lista_organizada_formulario[z][1]
+                    updatedAmount = tuple(commonItem)
+                    lista_organizada_DB[i] = updatedAmount
+                    break
+                else:
+                    continue
+
+        print(lista_organizada_DB)
+
+        updatedList = []
+        for producto in lista_organizada_DB:
+            for u in range(producto[1]):
+                updatedList.append(producto[0])
+        print(updatedList)
+        updatedInventory = " ".join(updatedList)
+        
+        '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
+        db_inventario.save()'''
+
+        inventario_obj_2 = Inventario.objects.get(id_bodega_id = id_bodega)
+        inventario_obj_2.lista_productos = updatedInventory
+        inventario_obj_2.save()
+
+        db_actividad = Actividad(id_empleado_id=usuarios_obj.id_empleado, tipo_actividad='despacho productos')
+        db_actividad.save()
+
+        ventas_obj = Ventas.objects.filter(estado_venta='por entregar')
+        bodegas_obj = Bodega.objects.all()
+
+        return render(request, 'despacho_productos.html', {'ventas': ventas_obj, 'bodegas':bodegas_obj,'mensaje': mensaje, 'mensaje_2':mensaje_2, 'color_mensaje':color})
+
+
+@login_required(login_url='../login/')
+def despacho_productos_next(request):
+    try:
+        id_venta = request.POST['id_venta']
+        id_bodega = request.POST['id_bodega']
+    except:
+        ventas_obj = Ventas.objects.filter(estado_venta='por entregar')
+        return render(request, 'despacho_productos.html', {'ventas': ventas_obj})
+    else:
+        return render(request, 'despacho_productos_next.html', {'id_venta':id_venta, 'id_bodega':id_bodega})
+ 
