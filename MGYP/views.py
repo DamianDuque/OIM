@@ -210,6 +210,7 @@ def ingreso_productos(request):
         inventario_obj = Inventario.objects.get(id_bodega_id = id_bodega)
         ValorDB = inventario_obj.lista_productos
         listaDB = ValorDB.split()
+        print(listaDB)
 
         #ValorFormulario = productos
         #listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
@@ -238,9 +239,9 @@ def ingreso_productos(request):
                     break
                 else:
                     continue
-        productos_db = Producto.objects.all()
-        cantidad_para_bodega = 0
-        bodega_2 = Bodega.objects.get(id_bodega = id_bodega)
+        # productos_db = Producto.objects.all()
+        # cantidad_para_bodega = 0
+        # bodega_2 = Bodega.objects.get(id_bodega = id_bodega)
         '''for producto_db in lista_organizada_DB:
             for producto_2 in productos_db:
                 if producto_db[0] == producto_2.codigo_de_barras:
@@ -262,6 +263,7 @@ def ingreso_productos(request):
                 updatedList.append(producto[0])
         
         updatedInventory = " ".join(updatedList)
+        print(updatedInventory)
         
         '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
         db_inventario.save()'''
@@ -310,6 +312,7 @@ def despacho_productos(request):
         venta_objeto = Ventas.objects.get(id_venta=id_venta)
         str_pr_venta = venta_objeto.lista_productos
         lista_pr_venta = str_pr_venta.split()
+        print(lista_pr_venta)
 
         # -- Arreglos de productos y cantidades -- #
         lista_productos_venta = list(Counter(lista_pr_venta).keys())
@@ -370,6 +373,7 @@ def despacho_productos(request):
         inventario_obj = Inventario.objects.get(id_bodega_id = id_bodega)
         ValorDB = inventario_obj.lista_productos
         listaDB = ValorDB.split()
+        print(listaDB)
 
         #ValorFormulario = productos
         #listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
@@ -392,7 +396,7 @@ def despacho_productos(request):
                 if  lista_organizada_DB[i][0] == lista_organizada_despacho[z][0]:
                     commonItem = list(lista_organizada_DB[i])
                     commonItem[1] -= lista_organizada_despacho[z][1]
-                    if commonItem[1] < 0:
+                    if commonItem[1] < 1:
                         estado_entrega_2 = 'pendiente por revision'
                         notas_entrega_2 = "Notas: Productos insuficientes para despacha."
                         mensaje = "Recepción realizada"
@@ -424,9 +428,9 @@ def despacho_productos(request):
         for producto in lista_organizada_DB:
             for u in range(producto[1]):
                 updatedList.append(producto[0])
-        print(updatedList)
-        updatedInventory = " ".join(updatedList)
         
+        updatedInventory = " ".join(updatedList)
+        print(updatedInventory)
         '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
         db_inventario.save()'''
 
