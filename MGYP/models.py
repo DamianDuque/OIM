@@ -15,6 +15,7 @@ class Producto(models.Model):
 	nombre = models.CharField(max_length=45, null=False)
 	descripcion = models.CharField(max_length=100, null=False)
 	peso = models.DecimalField(decimal_places=2, max_digits=20, null=False)
+	cantidad = models.CharField(max_length=5000, null=False)
 
 class Compras(models.Model):
 	id_compra = models.AutoField(primary_key=True, blank=False)
@@ -47,7 +48,7 @@ class Recepcion(models.Model):
 	fecha_ingreso = models.DateTimeField(auto_now_add=True)
 	estado_recepcion = models.CharField(max_length=45, null=False, blank=False, choices=(
 		('OK', 'OK'), ('pendiente por revision', 'pendiente por revision')))
-	notas_recepcion = models.CharField(max_length=45, null=False)
+	notas_recepcion = models.CharField(max_length=100, null=False)
 
 
 
@@ -75,7 +76,7 @@ class Entregas(models.Model):
 	fecha_despacho = models.DateTimeField(auto_now_add=True)
 	estado_entrega = models.CharField(max_length=45, null=False, blank=False, choices=(
 		('OK', 'OK'), ('pendiente por revision', 'pendiente por revision')))
-	notas_entrega = models.CharField(max_length=45, null=False)
+	notas_entrega = models.CharField(max_length=100, null=False)
 
 
 class Inventario(models.Model):

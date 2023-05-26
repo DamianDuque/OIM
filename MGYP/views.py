@@ -73,6 +73,21 @@ def inventario(request):
     return render(request, 'inventario.html', {'nombre': usuarios_obj.nombre, 'bodegas':bodegas_obj})
 
 @login_required(login_url='../login/')
+def inventario_next(request):
+    id_bodega = request.POST['id_bodega']
+    inventario_obj = Inventario.objects.get(id_bodega=id_bodega)
+    str_pr_inventario = inventario_obj.lista_productos
+    lista_pr_inventario = str_pr_inventario.split()
+
+    # -- Arreglos de productos y cantidades -- #
+    lista_productos_inventario = list(Counter(lista_pr_inventario).keys())
+    cantidades_productos_inventario = list(Counter(lista_pr_inventario).values())
+    # -- Organizar lista recibida de compras -- #
+    lista_organizada_inventario = list(sorted(zip(lista_productos_inventario,cantidades_productos_inventario)))
+    list_productos = Producto.objects.all()
+    return render(request, 'inventario_next.html', {'id_bodega':id_bodega, 'list_productos':list_productos})
+
+@login_required(login_url='../login/')
 def productos(request):
     producto_obj = Producto.objects.all()
     return render(request, 'productos.html', {'producto': producto_obj})
@@ -128,7 +143,7 @@ def ingreso_productos(request):
         compras_obj = Compras.objects.filter(estado_compra='por recibir')
         return render(request, 'ingreso_productos.html', {'compras': compras_obj, 'mensaje': ''})
     else:
-
+        mensaje_2 = ""
         #Elementos que vienen de la base de datos
         compra_objeto = Compras.objects.get(id_compra=id_compra)
         str_pr_compra = compra_objeto.lista_productos
@@ -196,47 +211,64 @@ def ingreso_productos(request):
         ValorDB = inventario_obj.lista_productos
         listaDB = ValorDB.split()
 
-        ValorFormulario = productos
-        listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
+        #ValorFormulario = productos
+        #listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
 
 
         # Sacar claves unicas y frecuencias
         lista_productos_DB = list(Counter(listaDB).keys())
         cantidades_productos_DB = list(Counter(listaDB).values())
 
-        lista_productos_formulario = list(Counter(listaFormulario).keys())
-        cantidades_productos_formulario = list(Counter(listaFormulario).values())
+        #lista_productos_formulario = list(Counter(listaFormulario).keys())
+        #cantidades_productos_formulario = list(Counter(listaFormulario).values())
 
         # -- Organizar lista recibida de compras -- #
         lista_organizada_DB = list(sorted(zip(lista_productos_DB,cantidades_productos_DB)))
-        lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
+        #lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
 
-        print(lista_organizada_DB)
-        print(lista_organizada_formulario)
 
 
         for i in range(len(lista_organizada_DB)):
-            for z in range(len(lista_organizada_formulario)):
-                if  lista_organizada_DB[i][0] == lista_organizada_formulario[z][0]:
+            for z in range(len(lista_organizada_ingreso)):
+                if  lista_organizada_DB[i][0] == lista_organizada_ingreso[z][0]:
                     commonItem = list(lista_organizada_DB[i])
-                    commonItem[1] += lista_organizada_formulario[z][1]
+                    commonItem[1] += lista_organizada_ingreso[z][1]
                     updatedAmount = tuple(commonItem)
                     lista_organizada_DB[i] = updatedAmount
                     break
                 else:
                     continue
+        productos_db = Producto.objects.all()
+        cantidad_para_bodega = 0
+        bodega_2 = Bodega.objects.get(id_bodega = id_bodega)
+        '''for producto_db in lista_organizada_DB:
+            for producto_2 in productos_db:
+                if producto_db[0] == producto_2.codigo_de_barras:
+                    lista_productos_inv = producto_2.cantidad.split()
+                    lista_productos_inv[bodega_2.id_bodega-1] = str(int(lista_productos_inv[bodega_2.id_bodega-1])+producto_db[1])
+                    producto_2.cantidad = lista_productos_inv
+                    producto_2.save()
+                    cantidad_para_bodega  = cantidad_para_bodega  + producto_db[1]
+        
+        
 
-        print(lista_organizada_DB)
+        bodega = Bodega.objects.get(id_bodega = id_bodega)  
+        bodega.capacidad = bodega.capacidad + cantidad_para_bodega    
+        bodega.save()   '''
 
         updatedList = []
         for producto in lista_organizada_DB:
             for u in range(producto[1]):
                 updatedList.append(producto[0])
-        print(updatedList)
+        
         updatedInventory = " ".join(updatedList)
         
         '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
         db_inventario.save()'''
+
+        compra_obj = Compras.objects.get(id_compra = id_compra)
+        compra_obj.estado_compra = 'recibida'
+        compra_obj.save()
 
         inventario_obj_2 = Inventario.objects.get(id_bodega_id = id_bodega)
         inventario_obj_2.lista_productos = updatedInventory
@@ -333,45 +365,60 @@ def despacho_productos(request):
                 mensaje = "Despacho realizada"
                 mensaje_2 = "¡Los productos despachados no coinciden con los vendidos!"
                 color = "#c42727"
-        
-        db_entrega = Entregas(id_venta_id=id_venta, id_empleado_id=usuarios_obj.id_empleado, lista_productos= lista_productos, cantidades_productos=cantidades, estado_entrega=estado_entrega_2, notas_entrega=notas_entrega_2)
-        db_entrega.save()
+    
 
         inventario_obj = Inventario.objects.get(id_bodega_id = id_bodega)
         ValorDB = inventario_obj.lista_productos
         listaDB = ValorDB.split()
 
-        ValorFormulario = productos
-        listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
-
+        #ValorFormulario = productos
+        #listaFormulario = ValorFormulario.splitlines() #En el codigo de views.py la funcion utilizada debe ser "splitlines()"
+        
 
         # Sacar claves unicas y frecuencias
         lista_productos_DB = list(Counter(listaDB).keys())
         cantidades_productos_DB = list(Counter(listaDB).values())
 
-        lista_productos_formulario = list(Counter(listaFormulario).keys())
-        cantidades_productos_formulario = list(Counter(listaFormulario).values())
+        #lista_productos_formulario = list(Counter(listaFormulario).keys())
+        #cantidades_productos_formulario = list(Counter(listaFormulario).values())
 
         # -- Organizar lista recibida de compras -- #
         lista_organizada_DB = list(sorted(zip(lista_productos_DB,cantidades_productos_DB)))
-        lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
-
-        print(lista_organizada_DB)
-        print(lista_organizada_formulario)
+        #lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
 
 
         for i in range(len(lista_organizada_DB)):
-            for z in range(len(lista_organizada_formulario)):
-                if  lista_organizada_DB[i][0] == lista_organizada_formulario[z][0]:
+            for z in range(len(lista_organizada_despacho)):
+                if  lista_organizada_DB[i][0] == lista_organizada_despacho[z][0]:
                     commonItem = list(lista_organizada_DB[i])
-                    commonItem[1] -= lista_organizada_formulario[z][1]
+                    commonItem[1] -= lista_organizada_despacho[z][1]
+                    if commonItem[1] < 0:
+                        estado_entrega_2 = 'pendiente por revision'
+                        notas_entrega_2 = "Notas: Productos insuficientes para despacha."
+                        mensaje = "Recepción realizada"
+                        mensaje_2 = "¡Faltan productos para completar la orden!"
+                        color = "#c42727"
                     updatedAmount = tuple(commonItem)
                     lista_organizada_DB[i] = updatedAmount
                     break
                 else:
                     continue
 
-        print(lista_organizada_DB)
+        '''productos_db = Producto.objects.all()
+        cantidad_para_bodega = 0
+        bodega_2 = Bodega.objects.get(id_bodega = id_bodega)
+        for producto_db in lista_organizada_DB:
+            for producto_2 in productos_db:
+                if producto_db[0] == producto_2.codigo_de_barras:
+                    lista_productos_inv = producto_2.cantidad.split()
+                    lista_productos_inv[bodega_2.id_bodega-1] = str(int(lista_productos_inv[bodega_2.id_bodega-1])-producto_db[1])
+                    producto_2.cantidad = lista_productos_inv
+                    producto_2.save()
+                    cantidad_para_bodega  = cantidad_para_bodega  - producto_db[1]
+
+        bodega = Bodega.objects.get(id_bodega = id_bodega)  
+        bodega.capacidad = bodega.capacidad - cantidad_para_bodega   
+        bodega.save()'''
 
         updatedList = []
         for producto in lista_organizada_DB:
@@ -382,6 +429,13 @@ def despacho_productos(request):
         
         '''db_inventario = Inventario(id_recepcion_id = db_recepcion.id_recepcion, id_bodega_id=id_bodega,lista_productos = updatedInventory)
         db_inventario.save()'''
+
+        db_entrega = Entregas(id_venta_id=id_venta, id_empleado_id=usuarios_obj.id_empleado, lista_productos= lista_productos, cantidades_productos=cantidades, estado_entrega=estado_entrega_2, notas_entrega=notas_entrega_2)
+        db_entrega.save()
+        
+        venta_obj = Ventas.objects.get(id_venta = id_venta)
+        venta_obj.estado_venta = 'entregada'
+        venta_obj.save()
 
         inventario_obj_2 = Inventario.objects.get(id_bodega_id = id_bodega)
         inventario_obj_2.lista_productos = updatedInventory
