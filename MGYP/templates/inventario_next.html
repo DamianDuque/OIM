@@ -39,34 +39,63 @@
                     </h4>
                 </div>
 
-                <div style="padding-left:6.2em; padding-right:6.2em; padding-bottom: 3em;">
-                    <table class="table table-hover table-bordered" style="border-color: #868686; ">
-                        <thead>
-                            <tr>
-                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>#</h5></th>
-                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Nombre</h5></th>
-                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Descripción</h5></th>
-                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Cantidad</h5></th>
-                                <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Código barras</h5></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for prod in list_productos %}
-                            <tr>
-                                <td style="background: #acacb4; color:rgb(24, 24, 24);"><h5>{{forloop.counter}}</h5></th>
-                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{prod.nombre}}</h5></td>
-                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);">
-                                    <h5>{{prod.descripcion}}</h5>
-                                </td>
-                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{prod.cantidad}}</h5>
-                                </td>
-                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{prod.codigo_de_barras}}</h5>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                <div style="padding-left:6.8em; padding-right:6.2em; padding-bottom: 3em;">
+                    <table>
+                        <tr>
+                            <td style="margin: 0em; padding:0em;">
 
-                        </tbody>
+                                <table class="table table-bordered" style="border-color: #868686; ">
+                                    <thead>
+                                        <tr>
+                                            <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>#</h5></th>
+                                            <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Nombre</h5></th>
+                                            <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Descripción</h5></th>
+                                            <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Código barras</h5></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for prod in list_productos %}
+                                        <tr>
+                                            
+                                            <td style="background: #acacb4; color:rgb(24, 24, 24);"><h5>{{forloop.counter}}</h5></th>
+                                            <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{prod.nombre}}</h5></td>
+                                            <td style="background: #d4d4d4; color:rgb(24, 24, 24);">
+                                                <h5>{{prod.descripcion}}</h5>
+                                            </td>
+                                            
+                                            
+                                            <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{prod.codigo_de_barras}}</h5>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="margin: 0em; padding:0em;">
+
+                                <table class="table table-bordered" style="border-color: #868686; ">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th style="background: #acacb4; color:rgb(24, 24, 24);" scope="col"><h5>Cantidad</h5></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cant in list_cantidades %}
+                                            <tr>
+                                            
+                                                <td style="background: #d4d4d4; color:rgb(24, 24, 24);"><h5>{{cant}} unds</h5></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
                     </table>
+                    
+                    
                 </div>
 
             </h2>

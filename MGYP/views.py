@@ -84,8 +84,12 @@ def inventario_next(request):
     cantidades_productos_inventario = list(Counter(lista_pr_inventario).values())
     # -- Organizar lista recibida de compras -- #
     lista_organizada_inventario = list(sorted(zip(lista_productos_inventario,cantidades_productos_inventario)))
-    list_productos = Producto.objects.all()
-    return render(request, 'inventario_next.html', {'id_bodega':id_bodega, 'list_productos':list_productos})
+    lista_cantidades_inv = []
+    for cantidad in lista_organizada_inventario:
+        lista_cantidades_inv.append(cantidad[1]-1)
+
+    lista_productos = Producto.objects.all().order_by('codigo_de_barras')
+    return render(request, 'inventario_next.html', {'id_bodega':id_bodega, 'list_productos':lista_productos, 'list_cantidades': lista_cantidades_inv})
 
 @login_required(login_url='../login/')
 def productos(request):
@@ -388,6 +392,7 @@ def despacho_productos(request):
 
         # -- Organizar lista recibida de compras -- #
         lista_organizada_DB = list(sorted(zip(lista_productos_DB,cantidades_productos_DB)))
+        
         #lista_organizada_formulario = list(sorted(zip(lista_productos_formulario, cantidades_productos_formulario)))
 
 
@@ -411,11 +416,13 @@ def despacho_productos(request):
         '''productos_db = Producto.objects.all()
         cantidad_para_bodega = 0
         bodega_2 = Bodega.objects.get(id_bodega = id_bodega)
+        aux = 0
         for producto_db in lista_organizada_DB:
             for producto_2 in productos_db:
                 if producto_db[0] == producto_2.codigo_de_barras:
                     lista_productos_inv = producto_2.cantidad.split()
-                    lista_productos_inv[bodega_2.id_bodega-1] = str(int(lista_productos_inv[bodega_2.id_bodega-1])-producto_db[1])
+                    lista_productos_inv[bodega_2.id_bodega-1] = str(int(lista_productos_inv[aux])-producto_db[1])
+                    aux = aux + 1 
                     producto_2.cantidad = lista_productos_inv
                     producto_2.save()
                     cantidad_para_bodega  = cantidad_para_bodega  - producto_db[1]
@@ -450,6 +457,7 @@ def despacho_productos(request):
 
         ventas_obj = Ventas.objects.filter(estado_venta='por entregar')
         bodegas_obj = Bodega.objects.all()
+
 
         return render(request, 'despacho_productos.html', {'ventas': ventas_obj, 'bodegas':bodegas_obj,'mensaje': mensaje, 'mensaje_2':mensaje_2, 'color_mensaje':color})
 

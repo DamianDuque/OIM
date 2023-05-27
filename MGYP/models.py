@@ -11,11 +11,10 @@ class Empleado(models.Model):
 
 
 class Producto(models.Model):
-	codigo_de_barras = models.CharField(primary_key=True, unique=True, max_length=45, null=False)
+	codigo_de_barras = models.PositiveBigIntegerField(primary_key=True, unique=True, null=False)
 	nombre = models.CharField(max_length=45, null=False)
 	descripcion = models.CharField(max_length=100, null=False)
 	peso = models.DecimalField(decimal_places=2, max_digits=20, null=False)
-	cantidad = models.CharField(max_length=5000, null=False)
 
 class Compras(models.Model):
 	id_compra = models.AutoField(primary_key=True, blank=False)
